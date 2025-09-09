@@ -10,40 +10,24 @@
 # Author     : dalhor
 ###############################################################################
 
-class ReactiveAgent:
-    def __init__(self, name="Agent"):
-        self.name = name
-        self.memory = []
+from agents.reactiveAgent import ReactiveAgent
+from helper.memoryManager import MemoryManager
 
-    def entryInput(self, input: str) -> str:
-        """Prend une entrée utilisateur et renvoie une action/réponse."""
-        return input.lower()
-
-    def decide(self, receivedInput: str) -> str:
-        if "bonjour" in receivedInput:
-            return "Bonjour à toi !"
-        elif "au revoir" in receivedInput:
-            return "Au revoir, à bientôt !"
-        elif "aide" in receivedInput:
-            return "Je peux répondre à 'bonjour', 'au revoir', et 'aide'."
-        else:
-            return "Je ne comprends pas encore cette requête."
-
-    def act(self, decision: str) -> str:
-        self.memory.append({"user": user_input, "agent": decision})
-        return decision
-
-    def perceive_and_act(self, user_input: str) -> str:
-        perceived = self.entryInput(user_input)
-        decision = self.decide(perceived)
-        return self.act(decision)
-
-# Exemple d'utilisation
 if __name__ == "__main__":
     agent = ReactiveAgent("Bot Réactif")
+    memory = MemoryManager()
+
     while True:
         user_input = input("Toi : ")
         if user_input.lower() in ["quit", "exit"]:
             print("Agent : Fin de la session.")
             break
-        print("Agent :", agent.perceive_and_act(user_input))
+
+        response = agent.perceive_and_act(user_input)
+        memory.save_memory(user_input, response)
+
+        print("Agent :", response)
+
+        # Exemple : taper "mémoire" pour afficher ce dont l'agent se souvient
+        if "mémoire" in user_input.lower():
+            print("Mémoire :", memory.get_recent())
