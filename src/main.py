@@ -11,23 +11,18 @@
 ###############################################################################
 
 from agents.reactiveAgent import ReactiveAgent
-from helper.memoryManager import MemoryManager
 
 if __name__ == "__main__":
     agent = ReactiveAgent("Bot Réactif")
-    memory = MemoryManager()
+    print("Agent initialisé ✅ (mémoire courte + longue activées)")
+    print("Tape 'quit' ou 'exit' pour arrêter.\n")
 
     while True:
         user_input = input("Toi : ")
         if user_input.lower() in ["quit", "exit"]:
-            print("Agent : Fin de la session.")
+            print("Agent : Fin de la session. Sauvegarde de la mémoire...")
+            agent.long_memory.save_memory()
             break
 
         response = agent.perceive_and_act(user_input)
-        memory.save_memory(user_input, response)
-
         print("Agent :", response)
-
-        # Exemple : taper "mémoire" pour afficher ce dont l'agent se souvient
-        if "mémoire" in user_input.lower():
-            print("Mémoire :", memory.get_recent())
