@@ -10,7 +10,7 @@
 # Author     : dalhor
 ###############################################################################
 
-from helper.memoryManager import MemoryManager, LongTermMemoryManager
+from helper.memoryManager import MemoryManager, LongTermMemoryManager, MemoryEntry
 
 class ReactiveAgent:
     def __init__(self, name="Agent"):
@@ -32,18 +32,22 @@ class ReactiveAgent:
         elif "souviens" in received_input:  
             memories = self.long_memory.search_memory(received_input, k=3)
             if memories:
-                return "Je me souviens : " + "; ".join([m["text"] for m in memories])
+                return "Je me souviens : " + "; ".join([m.pretty_print() for m in memories])
             else:
                 return "Je ne trouve rien dans ma mémoire."
         else:
-            return "Je ne comprends pas encore cette requête."
+            # essaie d'aller chercher en mémoire longue
+            memories = self.long_memory.search_memory(received_input, k=3)
+            if memories:
+                return "Je me souviens : " + "; ".join([m.pretty_print() for m in memories])
+            else:
+                return "Je ne comprends pas encore cette requête."
 
     def act(self, user_input: str, decision: str) -> str:
         self.short_memory.save_memory(user_input, decision)
 
-        if user_input.lower() not in ["souviens", "contexte", "aide"]:
-            exchange = f"User: {user_input} | Agent: {decision}"
-            self.long_memory.add_memory(exchange, {"user": user_input, "agent": decision})
+        if user_input.lower() not in ["souviens", "contexte", "aide"] and "je me souviens" not in decision.lower():
+            self.long_memory.add_memory(user_input, decision)
 
         return decision
 
