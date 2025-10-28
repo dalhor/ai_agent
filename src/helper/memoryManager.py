@@ -61,7 +61,7 @@ class MemoryEntry:
 class MemoryManager:
     def __init__(self, limit=short_memory_limit):
         self.short_memory = deque(maxlen=limit)
-    
+
     def save_memory(self, user_input, agent_answer):
         self.short_memory.append(
             {

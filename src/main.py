@@ -5,7 +5,7 @@
 # Date       : 19/08/2025
 #
 # Description:
-#    
+#    Lancement de l'agent réactif avec LLM
 #
 # Author     : dalhor
 ###############################################################################
@@ -13,7 +13,11 @@
 from agents.reactiveAgent import ReactiveAgent
 
 if __name__ == "__main__":
-    agent = ReactiveAgent("Bot Réactif")
+    agent = ReactiveAgent(
+        name="Bot Réactif",
+        llm_model_path="../../llama.cpp/models/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
+    )
+
     print("Agent initialisé ✅ (mémoire courte + longue activées)")
     print("Tape 'quit' ou 'exit' pour arrêter.\n")
 
